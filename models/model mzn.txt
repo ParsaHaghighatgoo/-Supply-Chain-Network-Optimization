@@ -1,0 +1,71 @@
+% ===============================
+% Supply Chain Optimization Model
+% Part 2 - MiniZinc
+% ===============================
+
+set of int: I;   % harbors
+set of int: J;   % inventories
+set of int: K;   % stores
+
+array[I] of int: S;        % supply
+array[K] of int: D;        % demand
+array[J] of int: Cap;      % inventory capacity
+array[J] of int: F;        % setup cost
+int: penalty;
+
+array[I,J] of int: cost_PI;
+array[J,K] of int: cost_IS;
+
+array[J,J] of bool: too_close;
+array[I,J] of bool: port_too_close;
+
+int: N_min;
+int: N_max;
+
+array[I,J] of var int: x;
+array[J,K] of var int: y;
+array[K] of var int: shortage;
+array[J] of var bool: open;
+
+constraint forall(i in I, j in J)(x[i,j] >= 0);
+constraint forall(j in J, k in K)(y[j,k] >= 0);
+constraint forall(k in K)(shortage[k] >= 0);
+
+constraint
+  forall(i in I)(
+    sum(j in J)(x[i,j]) <= S[i]
+  );
+
+constraint
+  forall(k in K)(
+    sum(j in J)(y[j,k]) + shortage[k] = D[k]
+  );
+
+constraint
+  forall(j in J)(
+    sum(i in I)(x[i,j]) = sum(k in K)(y[j,k])
+  );
+
+constraint
+  forall(j in J)(
+    sum(i in I)(x[i,j]) <= Cap[j] * bool2int(open[j])
+  );
+
+constraint
+  N_min <= sum(j in J)(bool2int(open[j])) <= N_max;
+
+constraint
+  forall(j1, j2 in J where j1 < j2)(
+    too_close[j1,j2] -> bool2int(open[j1]) + bool2int(open[j2]) <= 1
+  );
+
+constraint
+  forall(i in I, j in J)(
+    port_too_close[i,j] -> open[j] = false
+  );
+
+solve minimize
+  sum(i in I, j in J)(cost_PI[i,j] * x[i,j]) +
+  sum(j in J, k in K)(cost_IS[j,k] * y[j,k]) +
+  sum(j in J)(F[j] * bool2int(open[j])) +
+  penalty * sum(k in K)(shortage[k]);

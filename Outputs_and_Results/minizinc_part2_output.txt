@@ -1,0 +1,13 @@
+
+Running supply_chain.mzn, supply_chain.dzn
+48s 641msec
+
+Total Cost: 3405300
+Transport Cost: 3388900
+Setup Cost: 16400
+Penalty Cost: 0
+Warehouses Open: 8
+Warehouse Locations: [123, 138, 224, 248, 396, 419, 492, 496]
+----------
+==========
+Finished in 48s 641msec.

@@ -1,0 +1,28 @@
+Mathematical Model from Your Images:
+Parameters:
+
+D_k: Demand at store k
+S_i: Supply at harbor i
+F_j: Fixed cost of opening warehouse j (setup cost)
+C_ijk: Cost of transporting from harbor i through warehouse j to store k
+
+Decision Variables:
+
+X_ijk: Amount of flow from harbor i through warehouse j to store k
+Y_j ∈ {0,1}: Binary variable (1 if warehouse j is opened, 0 otherwise)
+
+Objective Function:
+Minimize: ΣΣΣ C_ijk * X_ijk + Σ F_j * Y_j
+         i∈I j∈J k∈K           j∈J
+Constraints:
+
+Demand satisfaction: ΣΣ X_ijk = D_k, ∀k∈K
+i  j
+Supply limit: ΣΣ X_ijk ≤ S_i, ∀i∈I
+j  k
+Capacity constraint: ΣΣ X_ijk ≤ Capacity_j * Y_j, ∀j∈J
+i  k
+Number of warehouses: N_min ≤ Σ Y_j ≤ N_max
+j
+Non-negativity: X_ijk ≥ 0
+Binary: Y_j ∈ {0,1}

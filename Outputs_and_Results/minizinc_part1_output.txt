@@ -1,0 +1,8 @@
+Part 1 Solution Summary:
+  Total Cost: 4,653,150
+    - Setup Cost: 10,200
+    - Transport Cost: 2,942,950
+    - Penalty Cost: 1,700,000
+  Warehouses Selected: 8
+  Shortage: 170 units
+  Computation Time: 0.001 seconds
